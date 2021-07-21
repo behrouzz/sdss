@@ -33,11 +33,15 @@ To see the image:
 img.show()
 ```
 
+![alt text](https://raw.githubusercontent.com/behrouzz/astronomy/main/images/Region-show.png)
+
 To see the image in three *gri* filter bands (green, red, infrared) separately:
 
 ```python
 img.show3b()
 ```
+
+![alt text](https://raw.githubusercontent.com/behrouzz/astronomy/main/images/Region-show3b.png)
 
 To find 10 nearest objects in a radius of 5 arc degrees:
 
