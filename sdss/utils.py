@@ -1,7 +1,7 @@
 from urllib.request import urlopen, urlretrieve
 import matplotlib.pyplot as plt
 import pandas as pd
-import binascii, io
+import binascii, io, bz2, os
 from PIL import Image
 import numpy as np
 
@@ -46,3 +46,26 @@ def show_object(objID, scale=0.1, width=300, height=300, figsize=(10,10)):
     fig, ax = plt.subplots(figsize=figsize)
     ax.imshow(data)
     plt.show()
+
+def download_frame(field, run, camcol, band, fr_type='jpg', path=''):
+    rerun = 301 #currently fixed
+    zrun = str(run).zfill(6)
+    zfield = str(field).zfill(4)
+    
+    if fr_type=='fits':
+        filename = f"frame-{band}-{zrun}-{camcol}-{zfield}.fits.bz2"
+    elif fr_type=='jpg':
+        filename = f"frame-{band}-{zrun}-{camcol}-{zfield}.jpg"
+    else:
+        raise Exception("fr_type should be 'jpg' or 'fits'.")
+    
+    BASE = "https://data.sdss.org/sas/dr16/eboss/photoObj/frames/"
+    url = BASE + f"{rerun}/{run}/{camcol}/" + filename
+    urlretrieve(url, path+filename)
+    
+    if fr_type=='fits':
+        with bz2.open(path+filename, 'rb') as f:
+            content = f.read()
+        with open(path+filename[:-4], 'wb') as f:
+            f.write(content)
+        os.remove(path+filename)
