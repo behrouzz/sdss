@@ -1,4 +1,4 @@
-from .core import Region
+from .core import Region, Object
 from .utils import sql2df, binimg2array, img_cutout, show_spect, show_object
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
