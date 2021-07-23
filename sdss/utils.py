@@ -5,6 +5,20 @@ import binascii, io, bz2, os
 from PIL import Image
 import numpy as np
 
+def decode_objid(obj_id):
+    if isinstance(obj_id, str):
+        obj_id = int(obj_id)
+    b = bin(obj_id)[2:].zfill(64)
+    dc = {}
+    dc['version'] = int(b[1:5], 2)
+    dc['rerun'] = int(b[5:16], 2)
+    dc['run'] = int(b[16:32], 2)
+    dc['camcol'] = int(b[32:35], 2)
+    dc['first_field'] = int(b[35], 2)
+    dc['field'] = int(b[36:48], 2)
+    dc['id_within_field'] = int(b[48:], 2)
+    return dc
+
 def sql2df(script):
     BASE = "http://skyserver.sdss.org/dr16/SkyServerWS/SearchTools/SqlSearch?cmd="
     script = ' '.join(script.strip().split('\n'))
