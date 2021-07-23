@@ -19,6 +19,17 @@ def decode_objid(obj_id):
     dc['id_within_field'] = int(b[48:], 2)
     return dc
 
+def decode_specid(spec_id):
+    if isinstance(spec_id, str):
+        spec_id = int(spec_id)
+    b = bin(spec_id)[2:].zfill(64)
+    dc = {}
+    dc['plate'] = int(s[:14], 2)
+    dc['fiber_id'] = int(s[14:26], 2)
+    dc['mjd'] = int(s[26:40], 2) + 50000
+    dc['run2d'] = int(s[40:54], 2)
+    return dc
+
 def sql2df(script):
     BASE = "http://skyserver.sdss.org/dr16/SkyServerWS/SearchTools/SqlSearch?cmd="
     script = ' '.join(script.strip().split('\n'))
