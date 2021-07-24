@@ -1,6 +1,6 @@
 from urllib.request import urlopen, urlretrieve
 import matplotlib.pyplot as plt
-from .utils import decode_objid, sql2df, binimg2array, img_cutout, show_spect, show_object
+from .utils import decode_objid, decode_specid, sql2df, binimg2array, img_cutout, show_spect, show_object
 
 
 class Region:
@@ -85,9 +85,39 @@ class Object:
     def __init__(self, objID=None, specObjID=None):
         if objID is None and specObjID is None:
             raise Exception("You should enter 'objID' or 'specObjID'")
+
+        if objID is not None:
+            self.objID = str(objID)
+            dc = decode_objid(objID)
+            self.sky_version = dc['version']
+            self.rerun = dc['rerun']
+            self.run = dc['run']
+            self.camcol = dc['camcol']
+            self.field = dc['field']
+            self.id_in_field = dc['id_within_field']
+        else:
+            self.objID = None
+            self.sky_version = None
+            self.rerun = None
+            self.run = None
+            self.camcol = None
+            self.field = None
+            self.id_in_field = None
+
+        if specObjID is not None:
+            self.specObjID = str(specObjID)
+            dc = decode_specid(specObjID)
+            self.plate = dc['plate']
+            self.fiber_id = dc['fiber_id']
+            self.mjd = dc['mjd']
+            self.run2d = dc['run2d']
+        else:
+            self.specObjID = None
+            self.plate = None
+            self.fiber_id = None
+            self.mjd = None
+            self.run2d = None
         
-        self.objID = str(objID) if objID is not None else None
-        self.specObjID = str(specObjID) if specObjID is not None else None
         self.ra = None
         self.dec = None
         self.u = None
@@ -95,13 +125,13 @@ class Object:
         self.r = None
         self.i = None
         self.z = None
-        self.run = None
-        self.camcol = None
-        self.field = None
+        #self.run = None
+        #self.camcol = None
+        #self.field = None
         self.type = None
-        self.mjd = None
-        self.plate = None
-        self.fiberID = None
+        #self.mjd = None
+        #self.plate = None
+        #self.fiberID = None
         self.redshift = None
         self.zErr = None
         self.zWarning = None
@@ -118,8 +148,8 @@ class Object:
     def _download_obj_spect(self):
         where = f"p.objID={self.objID}" if self.objID is not None else f"p.specObjID={self.specObjID}"
         script = f"""SELECT
-        p.objID,p.specObjID,p.ra,p.dec,p.u,p.g,p.r,p.i,p.z,p.run,p.camcol,p.field,p.type,p.mjd,
-        s.plate,s.fiberID,s.z AS redshift,s.zErr,s.zWarning,s.class,s.subClass,s.img
+        p.objID,p.specObjID,p.ra,p.dec,p.u,p.g,p.r,p.i,p.z,,p.type,
+        s.z AS redshift,s.zErr,s.zWarning,s.class,s.subClass,s.img
         FROM PhotoObj AS p
         JOIN SpecObj AS s ON s.bestObjID=p.objID
         WHERE """ + where
@@ -144,7 +174,7 @@ class Object:
                 self.specObjID = df['specObjID'].iloc[0]
 
         if len(df)>0:
-            int_cols = ['run','camcol','field','type','mjd','plate','fiberID','zWarning']
+            int_cols = ['type','zWarning']
             float_cols = ['ra','dec','u','g','r','i','z','redshift','zErr']
             df[int_cols] = df[int_cols].astype(int)
             df[float_cols] = df[float_cols].astype(float)
@@ -155,28 +185,42 @@ class Object:
             self.r = df['r'].iloc[0]
             self.i = df['i'].iloc[0]
             self.z = df['z'].iloc[0]
-            self.run = df['run'].iloc[0]
-            self.camcol = df['camcol'].iloc[0]
-            self.field = df['field'].iloc[0]
+            #self.run = df['run'].iloc[0]
+            #self.camcol = df['camcol'].iloc[0]
+            #self.field = df['field'].iloc[0]
             self.type = df['type'].iloc[0]
-            self.mjd = df['mjd'].iloc[0]
-            self.plate = df['plate'].iloc[0]
-            self.fiberID = df['fiberID'].iloc[0]
+            #self.mjd = df['mjd'].iloc[0]
+            #self.plate = df['plate'].iloc[0]
+            #self.fiberID = df['fiberID'].iloc[0]
             self.redshift = df['redshift'].iloc[0]
             self.zErr = df['zErr'].iloc[0]
             self.zWarning = df['zWarning'].iloc[0]
             self.mainClass = df['class'].iloc[0]
             self.subClass = df['subClass'].iloc[0]
             self.img = df['img'].iloc[0]
+            if self.objID is None:
+                self.objID = df['objID'].iloc[0]
+                dc = decode_objid(self.objID)
+                self.sky_version = dc['version']
+                self.rerun = dc['rerun']
+                self.run = dc['run']
+                self.camcol = dc['camcol']
+                self.field = dc['field']
+                self.id_in_field = dc['id_within_field']
+            if self.specObjID is None:
+                self.specObjID = df['specObjID'].iloc[0]
+                dc = decode_specid(self.specObjID)
+                self.plate = dc['plate']
+                self.fiber_id = dc['fiber_id']
+                self.mjd = dc['mjd']
+                self.run2d = dc['run2d']
         
     def _download_object(self):
-        script = "SELECT objID,specObjID,ra,dec,u,g,r,i,z,run,camcol,field,type,mjd "
+        script = "SELECT objID,specObjID,ra,dec,u,g,r,i,z,type "
         script = script + f"FROM PhotoObj WHERE objID={self.objID}"
         df = sql2df(script)
         if len(df)>0:
-            int_cols = ['run','camcol','field','type','mjd']
             float_cols = ['ra','dec','u','g','r','i','z']
-            df[int_cols] = df[int_cols].astype(int)
             df[float_cols] = df[float_cols].astype(float)
             self.specObjID = df['specObjID'].iloc[0]
             self.ra = df['ra'].iloc[0]
@@ -186,22 +230,27 @@ class Object:
             self.r = df['r'].iloc[0]
             self.i = df['i'].iloc[0]
             self.z = df['z'].iloc[0]
-            self.run = df['run'].iloc[0]
-            self.camcol = df['camcol'].iloc[0]
-            self.field = df['field'].iloc[0]
+            #self.run = df['run'].iloc[0]
+            #self.camcol = df['camcol'].iloc[0]
+            #self.field = df['field'].iloc[0]
             self.type = df['type'].iloc[0]
-            self.mjd = df['mjd'].iloc[0]
+            #self.mjd = df['mjd'].iloc[0]
 
             if self.specObjID!='0':
-                self._download_spect()
+                dc = decode_specid(self.specObjID)
+                self.plate = dc['plate']
+                self.fiber_id = dc['fiber_id']
+                self.mjd = dc['mjd']
+                self.run2d = dc['run2d']
+                self._download_spect() #download the spectrum
 
     def _download_spect(self):
-        script = "SELECT plate,fiberID,z AS redshift,zErr,zWarning,class,subClass,img "
+        script = "SELECT z AS redshift,zErr,zWarning,class,subClass,img "
         script = script + f"FROM SpecObj WHERE specObjID={self.specObjID}"
         df = sql2df(script)
         if len(df)>0:
-            self.plate = df['plate'].iloc[0]
-            self.fiberID = df['fiberID'].iloc[0]
+            #self.plate = df['plate'].iloc[0]
+            #self.fiberID = df['fiberID'].iloc[0]
             self.redshift = df['redshift'].iloc[0]
             self.zErr = df['zErr'].iloc[0]
             self.zWarning = df['zWarning'].iloc[0]
