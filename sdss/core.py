@@ -1,6 +1,6 @@
 from urllib.request import urlopen, urlretrieve
 import matplotlib.pyplot as plt
-from .utils import sql2df, binimg2array, img_cutout, show_spect, show_object
+from .utils import decode_objid, sql2df, binimg2array, img_cutout, show_spect, show_object
 
 
 class Region:
@@ -49,33 +49,34 @@ class Region:
             axes[i].axis('off')
         plt.show()
     
-    def nearest_objects(self, radius, n=10):
+    def nearest_objects(self, radius, n=10, max_g=None):
         """
         radius : arcmin
         """
-        SQL = f"SELECT TOP {n} objID,run,camcol,field,type,htmID,distance "
-        SQL = SQL + f"FROM dbo.fGetNearbyObjAllEq({self.ra},{self.dec},{radius}) ORDER BY distance"
-        df = sql2df(SQL)
-        df.iloc[:,1:-1] = df.iloc[:,1:-1].astype(int)
-        df.iloc[:,-1] = df.iloc[:,-1].astype(float)
+        max_g = f"WHERE p.g<{max_g}" if max_g is not None else ""
+        scrip = f"""SELECT TOP {n} f.objID, f.type, f.distance,
+        p.specObjID, p.ra, p.dec, p.u, p.g, p.r, p.i, p.z
+        FROM dbo.fGetNearbyObjAllEq({self.ra},{self.dec},{radius}) AS f
+        JOIN PhotoObj AS p ON p.objID = f.objID {max_g}
+        ORDER BY f.distance"""
+        df = sql2df(scrip)
+        float_cols = ['distance','ra','dec','u','g','r','i','z']
+        df[float_cols] = df[float_cols].astype(float)
         return df
 
     def nearest_spects(self, radius, n=10):
         """
         radius : arcmin
         """
-        SQL = f"""SELECT TOP {n} 
-        f.specObjID, sp.objID, sp.ra, sp.dec, sp.class, sp.subClass,
-        sp.run, sp.camcol, sp.field,
+        scrip = f"""SELECT TOP {n} 
+        sp.objID, f.specObjID, f.distance, sp.ra, sp.dec, sp.class, sp.subClass,
         sp.modelMag_u AS u, sp.modelMag_g AS g, sp.modelMag_r AS r, sp.modelMag_i AS i, sp.modelMag_z AS z, 
-        f.plate, f.mjd, f.fiberID, f.z AS redshift, f.zErr, f.zWarning, f.htmID, f.distance
+        f.z AS redshift, f.zErr, f.zWarning
         FROM dbo.fGetNearbySpecObjEq({self.ra},{self.dec},{radius}) AS f
         JOIN SpecPhoto AS sp ON sp.specObjID = f.specObjID
         ORDER BY f.distance"""
-        df = sql2df(SQL)
-        int_cols = ['run','camcol','field','plate','mjd','fiberID','zWarning','htmID']
-        float_cols = ['ra','dec','u','g','r','i','z','redshift','zErr','distance']
-        df[int_cols] = df[int_cols].astype(int)
+        df = sql2df(scrip)
+        float_cols = ['distance','ra','dec','u','g','r','i','z','redshift','zErr']
         df[float_cols] = df[float_cols].astype(float)
         return df
 
@@ -109,8 +110,6 @@ class Object:
         self.img = None
 
     def download(self):
-        #if (self.objID is not None) and (self.specObjID is not None):
-        #   self._download_obj_spect()
         if (self.objID is not None) and (self.specObjID is None):
             self._download_object()
         else:
