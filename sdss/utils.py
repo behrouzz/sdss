@@ -24,10 +24,10 @@ def decode_specid(spec_id):
         spec_id = int(spec_id)
     b = bin(spec_id)[2:].zfill(64)
     dc = {}
-    dc['plate'] = int(s[:14], 2)
-    dc['fiber_id'] = int(s[14:26], 2)
-    dc['mjd'] = int(s[26:40], 2) + 50000
-    dc['run2d'] = int(s[40:54], 2)
+    dc['plate'] = int(b[:14], 2)
+    dc['fiber_id'] = int(b[14:26], 2)
+    dc['mjd'] = int(b[26:40], 2) + 50000
+    dc['run2d'] = int(b[40:54], 2)
     return dc
 
 def sql2df(script):
