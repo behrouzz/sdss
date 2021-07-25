@@ -126,7 +126,7 @@ class SpecObj:
         if figsize is None:
             fig, ax = plt.subplots()
         else:
-            fig, ax = plt.subplots(figsize)
+            fig, ax = plt.subplots(figsize=figsize)
         data = binimg2array(self.img)
         ax.imshow(data, cmap='gray')
         plt.show()
