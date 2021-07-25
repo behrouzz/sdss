@@ -57,7 +57,7 @@ class Region:
         radius : arcmin
         """
         if radius is None:
-            redius = self.fov/2
+            redius = (self.fov * 60) /2
         max_g = f"WHERE p.g<{max_g}" if max_g is not None else ""
         scrip = f"""SELECT TOP {n} f.objID, f.type, f.distance,
         p.specObjID, p.ra, p.dec, p.u, p.g, p.r, p.i, p.z
@@ -74,7 +74,7 @@ class Region:
         radius : arcmin
         """
         if radius is None:
-            redius = self.fov/2
+            redius = (self.fov * 60) /2
         scrip = f"""SELECT TOP {n} 
         sp.objID, f.specObjID, f.distance, sp.ra, sp.dec, sp.class, sp.subClass,
         sp.modelMag_u AS u, sp.modelMag_g AS g, sp.modelMag_r AS r, sp.modelMag_i AS i, sp.modelMag_z AS z, 
