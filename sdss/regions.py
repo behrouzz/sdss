@@ -5,9 +5,10 @@ from .utils import (decode_objid, decode_specid, sql2df, binimg2array,
 
 
 class Region:
-    def __init__(self, ra, dec, scale=0.396127, width=300, height=300, opt='GS', query=''):
+    # fov in degrees
+    def __init__(self, ra, dec, fov=0.033, width=300, height=300, opt='GS', query=''):
         self.ra, self.dec = ra, dec
-        self.scale = scale
+        self.fov = fov
         self.width = width
         self.height = height
         self.opt = opt
@@ -15,7 +16,8 @@ class Region:
         self.data = None
     
     def download_data(self):
-        self.data = img_cutout(ra=self.ra, dec=self.dec, scale=self.scale, 
+        scale = self.fov * (0.396127 / 0.033)
+        self.data = img_cutout(ra=self.ra, dec=self.dec, scale=scale, 
                                width=self.width, height=self.height,
                                opt=self.opt, query=self.query)
 
