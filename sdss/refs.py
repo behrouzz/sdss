@@ -1,0 +1,10 @@
+photo_types = {'0':'UNKNOWN',
+               '1':'COSMIC_RAY',
+               '2':'DEFECT',
+               '3':'GALAXY',
+               '4':'GHOST',
+               '5':'KNOWNOBJ',
+               '6':'STAR',
+               '7':'TRAIL',
+               '8':'SKY',
+               '9':'NOTATYPE'}

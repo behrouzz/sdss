@@ -5,6 +5,7 @@ import binascii, io, bz2, os
 from PIL import Image
 import numpy as np
 
+
 def decode_objid(obj_id):
     if isinstance(obj_id, str):
         obj_id = int(obj_id)
