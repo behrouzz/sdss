@@ -52,10 +52,12 @@ class Region:
             axes[i].axis('off')
         plt.show()
     
-    def nearest_objects(self, radius=self.fov/2, n=10, max_g=None):
+    def nearest_objects(self, radius=None, n=10, max_g=None):
         """
         radius : arcmin
         """
+        if radius is None:
+            redius = self.fov/2
         max_g = f"WHERE p.g<{max_g}" if max_g is not None else ""
         scrip = f"""SELECT TOP {n} f.objID, f.type, f.distance,
         p.specObjID, p.ra, p.dec, p.u, p.g, p.r, p.i, p.z
@@ -67,10 +69,12 @@ class Region:
         df[float_cols] = df[float_cols].astype(float)
         return df
 
-    def nearest_spects(self, radius=self.fov/2, n=10):
+    def nearest_spects(self, radius=None, n=10):
         """
         radius : arcmin
         """
+        if radius is None:
+            redius = self.fov/2
         scrip = f"""SELECT TOP {n} 
         sp.objID, f.specObjID, f.distance, sp.ra, sp.dec, sp.class, sp.subClass,
         sp.modelMag_u AS u, sp.modelMag_g AS g, sp.modelMag_r AS r, sp.modelMag_i AS i, sp.modelMag_z AS z, 

@@ -16,7 +16,7 @@ Requirements are *numpy*, *Pillow*, *matplotlib* and *pandas*.
 
 ## Quick start
 
-Let's get the positions of the sun between two times:
+Let's create a Region:
 
 ```python
 from sdss import Region
@@ -24,7 +24,7 @@ from sdss import Region
 ra = 179.689293428354
 dec = -0.454379056007667
 
-img = Region(ra, dec)
+img = Region(ra, dec, fov=0.033)
 ```
 
 To see the image:
