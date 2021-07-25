@@ -52,7 +52,7 @@ class Region:
             axes[i].axis('off')
         plt.show()
     
-    def nearest_objects(self, radius, n=10, max_g=None):
+    def nearest_objects(self, radius=self.fov/2, n=10, max_g=None):
         """
         radius : arcmin
         """
@@ -67,7 +67,7 @@ class Region:
         df[float_cols] = df[float_cols].astype(float)
         return df
 
-    def nearest_spects(self, radius, n=10):
+    def nearest_spects(self, radius=self.fov/2, n=10):
         """
         radius : arcmin
         """

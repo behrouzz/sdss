@@ -49,7 +49,7 @@ To find 10 nearest objects in a radius of 5 arc degrees:
 df_obj = img.nearest_objects(radius=5, n=10)
 ```
 
-To find 10 nearest objects with spectrum in a darius of 5 arc degrees:
+To find 10 nearest objects with spectrum in a radius of 5 arc degrees:
 
 ```python
 df_sp = img.nearest_spects(radius=5, n=10)
