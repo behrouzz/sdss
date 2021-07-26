@@ -5,6 +5,28 @@ import binascii, io, bz2, os
 from PIL import Image
 import numpy as np
 
+def hmsdms_to_deg(hmsdms):
+    """
+    Convert HMS (hours, minutes, seconds) and DMS (degrees, minutes, seconds) to
+    RA, DEC in decimal degrees.
+
+    Example:
+        hmsdms_to_deg('06 45 08.91728 -16 42 58.0171')
+    Return:
+        (101.28715533333333, -15.28388413888889)
+    """
+    ls = hmsdms.split(' ')
+    ra_h = int(ls[0])
+    ra_m = int(ls[1])
+    ra_s = float(ls[2])
+    dec_d = int(ls[3])
+    dec_m = int(ls[4])
+    dec_s = float(ls[5])
+
+    ra = 15*ra_h + 15*ra_m/60 + 15*ra_s/3600
+    dec = dec_d + dec_m/60 + dec_s/3600
+
+    return ra, dec
 
 def decode_objid(obj_id):
     if isinstance(obj_id, str):
