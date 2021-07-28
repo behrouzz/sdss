@@ -1,4 +1,5 @@
 from urllib.request import urlopen, urlretrieve
+import requests
 import matplotlib.pyplot as plt
 import pandas as pd
 import binascii, io, bz2, os
@@ -57,7 +58,8 @@ def sql2df(script):
     BASE = "http://skyserver.sdss.org/dr16/SkyServerWS/SearchTools/SqlSearch?cmd="
     script = ' '.join(script.strip().split('\n'))
     url = BASE+script.replace(' ', '%20') + '&format=csv'
-    r = urlopen(url).read().decode('utf-8')
+    req = requests.request('GET', url)
+    r = req.content.decode('utf-8')
     lines = r.splitlines()
     col = lines[1].split(',')
     data_lines = [i.split(',') for i in lines[2:]]
