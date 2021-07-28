@@ -11,7 +11,7 @@ Install the latest version of *sdss* from [PyPI](https://pypi.org/project/sdss/)
 
     pip install sdss
 
-Requirements are *numpy*, *Pillow*, *matplotlib* and *pandas*.
+Requirements are *numpy*, *requests*, *Pillow*, *matplotlib* and *pandas*.
 
 
 ## Quick start
@@ -24,13 +24,13 @@ from sdss import Region
 ra = 179.689293428354
 dec = -0.454379056007667
 
-img = Region(ra, dec, fov=0.033)
+reg = Region(ra, dec, fov=0.033)
 ```
 
 To see the image:
 
 ```python
-img.show()
+reg.show()
 ```
 
 ![alt text](https://raw.githubusercontent.com/behrouzz/astronomy/main/images/Region-show.png)
@@ -38,19 +38,19 @@ img.show()
 To see the image in three *gri* filter bands (green, red, infrared) separately:
 
 ```python
-img.show3b()
+reg.show3b()
 ```
 
 ![alt text](https://raw.githubusercontent.com/behrouzz/astronomy/main/images/Region-show3b.png)
 
-To find 10 nearest objects in a radius of 5 arc degrees:
+To find nearest objects:
 
 ```python
-df_obj = img.nearest_objects(radius=5, n=10)
+df_obj = reg.nearest_objects()
 ```
 
-To find 10 nearest objects with spectrum in a radius of 5 arc degrees:
+To find nearest objects with spectrum:
 
 ```python
-df_sp = img.nearest_spects(radius=5, n=10)
+df_sp = reg.nearest_spects()
 ```
