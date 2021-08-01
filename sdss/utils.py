@@ -65,6 +65,11 @@ def sql2df(script):
     data_lines = [i.split(',') for i in lines[2:]]
     return pd.DataFrame(data_lines, columns=col)
 
+def sql_columns(table_name):
+    script = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{table_name}'"
+    df = sql2df(script)
+    return list(df['COLUMN_NAME'])
+
 def binimg2array(img_raw):
     img_raw = img_raw[2:]
     img_b = binascii.a2b_hex(img_raw)
