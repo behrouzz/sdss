@@ -66,7 +66,7 @@ def sql2df(script):
     return pd.DataFrame(data_lines, columns=col)
 
 def sql_columns(table_name):
-    script = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{table_name}'"
+    script = f"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{table_name}'"
     df = sql2df(script)
     return list(df['COLUMN_NAME'])
 
