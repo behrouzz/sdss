@@ -9,7 +9,7 @@ photo_types = {'0':'UNKNOWN',
                '8':'SKY',
                '9':'NOTATYPE'}
 
-manga_ancillary ={
+manga_ancillary = {
     0:'None',
     1:'Luminous AGN',
     2:'Luminous AGN',
