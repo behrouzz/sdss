@@ -131,7 +131,7 @@ class SpecObj:
         ax.imshow(data, cmap='gray')
         plt.show()
 
-    def download_spec(self, path='', lite=True):
+    def spec_url(self, path='', lite=True):
         run2d = str(self.run2d)
         plate = str(self.plate).zfill(4)
         mjd = str(self.mjd).zfill(5)
@@ -143,4 +143,9 @@ class SpecObj:
             PAR = f"{run2d}/spectra/{plate}/"
         filename = f"spec-{plate}-{mjd}-{fiber}.fits"
         URL = BASE + PAR + filename
-        urlretrieve(URL, path+filename)
+        return URL
+
+    def download_spec(self, path='', lite=True):
+        url = self.spec_url(path=path, lite=lite)
+        filename = url.split('/')[-1]
+        urlretrieve(url, path+filename)

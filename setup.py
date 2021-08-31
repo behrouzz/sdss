@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="sdss",
-    version="0.2.0",
+    version="0.2.1",
     author="Behrouz Safari",
     author_email="behrouz.safari@gmail.com",
     description="A python package for retrieving and analysing data from SDSS (Sloan Digital Sky Survey)",
