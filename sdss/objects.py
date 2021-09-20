@@ -1,5 +1,7 @@
 from urllib.request import urlopen, urlretrieve
 import matplotlib.pyplot as plt
+import pandas as pd
+from io import StringIO
 from .utils import (decode_objid, decode_specid, sql2df, binimg2array,
                    img_cutout, show_spect, show_object)
 from .refs import photo_types
@@ -156,3 +158,9 @@ class SpecObj:
             url = BASE + PAR
             filename = f"spec-{self.plate}-{self.mjd}-{self.fiberID}.csv"
             urlretrieve(url, path+filename)
+
+    def spec_df(self):
+        BASE = 'http://dr16.sdss.org/optical/spectrum/view/data/format=csv?'
+        PAR = f"plateid={self.plate}&mjd={self.mjd}&fiberid={self.fiberID}&reduction2d=v5_7_0"
+        r = urlopen(BASE+PAR).read().decode('utf-8')
+        return pd.read_csv(StringIO(r))
