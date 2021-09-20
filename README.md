@@ -54,3 +54,5 @@ To find nearest objects with spectrum:
 ```python
 df_sp = reg.nearest_spects()
 ```
+
+See more examples at [astrodatascience.net](https://astrodatascience.net/)
