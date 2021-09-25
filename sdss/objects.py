@@ -147,16 +147,21 @@ class SpecObj:
         URL = BASE + PAR + filename
         return URL
 
-    def download_spec(self, path='', lite=True, fits=True):
+    def download_spec(self, path='', filename=None, lite=True, fits=True):
+        if len(path)>0:
+            if path[-1]!='/':
+                path = path + '/' 
         if fits:
             url = self.spec_url(path=path, lite=lite)
-            filename = url.split('/')[-1]
+            if filename is None:
+                filename = url.split('/')[-1]
             urlretrieve(url, path+filename)
         else:
             BASE = 'http://dr16.sdss.org/optical/spectrum/view/data/format=csv?'
             PAR = f"plateid={self.plate}&mjd={self.mjd}&fiberid={self.fiberID}&reduction2d=v5_7_0"
             url = BASE + PAR
-            filename = f"spec-{self.plate}-{self.mjd}-{self.fiberID}.csv"
+            if filename is None:
+                filename = f"spec-{self.plate}-{self.mjd}-{self.fiberID}.csv"
             urlretrieve(url, path+filename)
 
     def spec_df(self):
