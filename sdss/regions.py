@@ -36,6 +36,7 @@ class Region:
             ax.imshow(self.data[:,:,2], cmap='gray')
         else:
             ax.imshow(self.data)
+        plt.axis('off') # new
         plt.show()
 
     def show3b(self, figsize=None):

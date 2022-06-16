@@ -60,6 +60,7 @@ class PhotoObj:
     def show(self, scale=0.1, width=200, height=200):
         data = self.cutout_image(scale=scale, width=width, height=height)
         plt.imshow(data)
+        plt.axis('off') # new
         plt.show()
 
 
@@ -131,6 +132,7 @@ class SpecObj:
             fig, ax = plt.subplots(figsize=figsize)
         data = binimg2array(self.img)
         ax.imshow(data, cmap='gray')
+        plt.axis('off') # new
         plt.show()
 
     def spec_url(self, path='', lite=True):
