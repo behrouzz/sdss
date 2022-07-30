@@ -22,12 +22,15 @@ def frames_url(run):
     return url
 
 
-def frame_url(run, camcol, field, band, rerun=301, dr=17):
+def frame_url(run, camcol, field, band, rerun=301, dr=17, jpg=False):
     BASE = f"https://data.sdss.org/sas/dr{dr}/eboss/photoObj/frames/"
     run6 = str(run).zfill(6)
     field = str(field).zfill(4)
     url = BASE + \
     f"{rerun}/{run}/{camcol}/frame-{band}-{run6}-{camcol}-{field}.fits.bz2"
+    if jpg:
+        url = url.replace(f'-{band}-', '-irg-')
+        url = url.replace('fits.bz2', 'jpg')
     return url
 
 
