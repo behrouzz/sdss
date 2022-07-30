@@ -103,6 +103,7 @@ def show_object(objID, scale=0.1, width=300, height=300, figsize=(10,10)):
     plt.show()
 
 def download_frame(field, run, camcol, band, fr_type='jpg', path=''):
+    """EXPIRED! Use sdss.photometry!"""
     rerun = 301 #currently fixed
     zrun = str(run).zfill(6)
     zfield = str(field).zfill(4)
@@ -124,21 +125,3 @@ def download_frame(field, run, camcol, band, fr_type='jpg', path=''):
         with open(path+filename[:-4], 'wb') as f:
             f.write(content)
         os.remove(path+filename)
-
-
-def frame_url(run, camcol, field, band, rerun=301, dr=17):
-    BASE = f"https://data.sdss.org/sas/dr{dr}/eboss/photoObj/frames/"
-    run6 = str(run).zfill(6)
-    field = str(field).zfill(4)
-    url = BASE + \
-    f"{rerun}/{run}/{camcol}/frame-{band}-{run6}-{camcol}-{field}.fits.bz2"
-    return url
-
-
-def obj_frame_url(objid, band):
-    dc = decode_objid(objid)
-    url = frame_url(run=dc['run'],
-                    camcol=dc['camcol'],
-                    field=dc['field'],
-                    band=band)
-    return url

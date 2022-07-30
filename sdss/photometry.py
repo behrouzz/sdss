@@ -1,6 +1,8 @@
 """
 photometry module
 -----------------
+Module for download image from SDSS server and photometric calculations.
+
 Useful links:
 
 Imaging data models:
