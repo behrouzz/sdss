@@ -1,3 +1,15 @@
+"""
+photometry module
+-----------------
+Useful links:
+
+Imaging data models:
+https://www.sdss.org/dr12/imaging/imaging_access/
+
+Frame data model:
+https://data.sdss.org//datamodel/files/BOSS_PHOTOOBJ/frames/RERUN/RUN/CAMCOL/frame.html
+"""
+
 import bz2
 import numpy as np
 from .utils import decode_objid
@@ -34,6 +46,7 @@ def unzip(filename):
     with open(filename[:-4], 'wb') as f:
         f.write(content)
 
+        
 def flux_star(data, center, r_star):
     h, w = data.shape
     Y, X = np.ogrid[:h, :w]
