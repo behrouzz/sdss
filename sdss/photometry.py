@@ -36,12 +36,13 @@ def frame_url(run, camcol, field, band, rerun=301, dr=17, jpg=False):
     return url
 
 
-def obj_frame_url(objid, band):
+def obj_frame_url(objid, band, jpg=False):
     dc = decode_objid(objid)
     url = frame_url(run=dc['run'],
                     camcol=dc['camcol'],
                     field=dc['field'],
-                    band=band)
+                    band=band,
+                   jpg=jpg)
     return url
 
 
