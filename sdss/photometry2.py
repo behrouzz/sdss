@@ -8,6 +8,13 @@ import pandas as pd
 from sdss.utils import decode_objid
 from sdss import sql2df
 from sdss.photometry import obj_frame_url, unzip
+import requests
+
+
+def download_file(url, path=''):
+    filename = url.rsplit('/', 1)[-1]
+    r = requests.get(url, allow_redirects=True)
+    open(path+filename, 'wb').write(r.content)
 
 
 def frame_filename(objid):
@@ -92,32 +99,3 @@ def obj_from_jpg(jpg_file, df, objid, n=50):
     img[:,:, 2] = img_cut2
 
     return img.astype(int)
-
-
-#==============================================================
-
-objid = 1237646587710014999
-
-zip_adr = 'data/' + frame_filename(objid) + '.fits.bz2'
-fits_adr = zip_adr[:-4]
-jpg_adr = fits_adr.replace('-r-', '-irg-').replace('fits', 'jpg')
-
-should_download = False # we have already downloaded files
-
-if should_download:
-    zip_url = obj_frame_url(objid, 'r')
-    urlretrieve(zip_url, zip_adr)
-    unzip(zip_adr)
-    jpg_url = obj_frame_url(objid, 'irg', jpg=True)
-    urlretrieve(jpg_url, jpg_adr)
-
-df = get_df(objid)
-df = df_radec2pixel(df=df, fits_file=fits_adr)
-
-img = obj_from_jpg(jpg_file=jpg_adr, df=df, objid=objid)
-
-fig, ax = plt.subplots()
-ax.imshow(img)
-plt.show()
-
-
