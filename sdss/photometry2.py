@@ -99,3 +99,33 @@ def obj_from_jpg(jpg_file, df, objid, n=50):
     img[:,:, 2] = img_cut2
 
     return img.astype(int)
+
+
+"""
+import matplotlib.pyplot as plt
+from sdss.utils import decode_objid
+from sdss.photometry import obj_frame_url, unzip
+from photometry2 import *
+
+objid = 1237646587710014999
+
+zip_adr = 'data/' + frame_filename(objid) + '.fits.bz2'
+fits_adr = zip_adr[:-4]
+jpg_adr = fits_adr.replace('-r-', '-irg-').replace('fits', 'jpg')
+
+zip_url = obj_frame_url(objid, 'r')
+download_file(zip_url, 'data/')
+unzip(zip_adr)
+
+jpg_url = obj_frame_url(objid, 'irg', jpg=True)
+download_file(jpg_url, 'data/')
+
+df = get_df(objid)
+df = df_radec2pixel(df=df, fits_file=fits_adr)
+
+img = obj_from_jpg(jpg_file=jpg_adr, df=df, objid=objid)
+
+fig, ax = plt.subplots()
+ax.imshow(img)
+plt.show()
+"""
