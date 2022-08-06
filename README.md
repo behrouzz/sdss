@@ -105,6 +105,8 @@ plt.show()
 Let's find the best apparture:
 
 ```python
+from sdss.photometry import flux
+
 data = img[:,:,0]
 half = data.shape[0]//2
 center = (half, half)
