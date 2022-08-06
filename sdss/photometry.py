@@ -148,21 +148,42 @@ def unzip(filename):
         f.write(content)
 
         
-def flux_star(data, center, r_star):
+def star_flux(data, center, r_star):
     h, w = data.shape
     Y, X = np.ogrid[:h, :w]
     dist_from_center = np.sqrt((X - center[0])**2 + (Y-center[1])**2)
     mask = dist_from_center <= r_star
     flux_matrix = np.multiply(data, mask)
-    return flux_matrix
+    n_pix = mask.sum()
+    return n_pix, flux_matrix
 
 
-def flux_sky(data, center, r_star, r_sky):
+def mean_sky_flux(data, center, r_inter, r_sky):
     h, w = data.shape
     Y, X = np.ogrid[:h, :w]
     dist_from_center = np.sqrt((X - center[0])**2 + (Y-center[1])**2)
     mask1 = dist_from_center <= r_sky
-    mask2 = dist_from_center > r_star
+    mask2 = dist_from_center > r_inter
     mask = np.logical_and(mask1, mask2)
-    flux_matrix = np.multiply(data, mask)
-    return flux_matrix
+    arr = np.array(sorted(data[mask]))
+    twent = round(0.2 * len(arr))
+    mean_sky = arr[twent:-twent].mean()
+    return mean_sky
+
+
+def flux(data, center, r_star):
+    r_inter = r_star * 2
+    r_sky = r_star * 3
+    n_pix_star, flux_matrix_star = star_flux(data=data, center=center, r_star=r_star)
+    flux_star = flux_matrix_star.sum()
+    mean_sky = mean_sky_flux(data=data, center=center, r_inter=r_inter, r_sky=r_sky)
+    background = mean_sky * n_pix_star
+    real_flux = flux_star - background
+    return background, real_flux
+
+
+def fwhm(x, y):
+    max_y = max(y)
+    xs = np.array([i for i in x if y[i] >= max_y/2])
+    ys = np.array([y[i] for i in x if y[i] >= max_y/2])
+    return xs, ys

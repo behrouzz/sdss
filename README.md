@@ -102,4 +102,27 @@ ax.imshow(img)
 plt.show()
 ```
 
+Let's find the best apparture:
+
+```python
+data = img[:,:,0]
+half = data.shape[0]//2
+center = (half, half)
+
+ls_r_star = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+ls_background = []
+ls_real_flux = []
+for r_star in ls_r_star:
+    background, real_flux = flux(data, center, r_star)
+    ls_background.append(background)
+    ls_real_flux.append(real_flux)
+
+fig, ax = plt.subplots()
+ax.scatter(ls_r_star, ls_real_flux, c='b')
+ax.set_xlabel('R star')
+ax.set_ylabel('Sky subtracted flux')
+plt.grid()
+plt.show()
+```
+
 See more examples at [astrodatascience.net](https://astrodatascience.net/)
