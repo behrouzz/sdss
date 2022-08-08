@@ -185,5 +185,5 @@ def flux(data, center, r_star):
 def fwhm(x, y):
     max_y = max(y)
     xs = np.array([i for i in x if y[i] >= max_y/2])
-    ys = np.array([y[i] for i in x if y[i] >= max_y/2])
-    return xs, ys
+    #ys = np.array([y[i] for i in x if y[i] >= max_y/2])
+    return len(xs)
