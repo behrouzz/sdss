@@ -36,13 +36,18 @@ def frame_filename(objid):
     filename = f'frame-r-{run6}-{camcol}-{field}'
     return filename
 
+
 def get_df(objid):
+    """
+    Get coords and mags of all stars in an image frame as DataFrame
+    """
     dc = decode_objid(objid)
 
     script = f"""
     SELECT objid, ra, dec, i, r, g
     FROM PhotoObj
-    WHERE run={dc['run']}
+    WHERE type=6
+    AND run={dc['run']}
     AND camcol={dc['camcol']}
     AND field={dc['field']}
     """
