@@ -55,7 +55,7 @@ def decode_specid(spec_id):
     return dc
 
 def sql2df(script):
-    BASE = "http://skyserver.sdss.org/dr16/SkyServerWS/SearchTools/SqlSearch?cmd="
+    BASE = "https://skyserver.sdss.org/dr16/SkyServerWS/SearchTools/SqlSearch?cmd="
     script = ' '.join(script.strip().split('\n'))
     url = BASE+script.replace(' ', '%20') + '&format=csv'
     req = requests.request('GET', url)
@@ -78,7 +78,7 @@ def binimg2array(img_raw):
     return data
 
 def img_cutout(ra, dec, scale, width, height, opt, query):
-    BASE = "http://skyserver.sdss.org/dr16/SkyServerWS/ImgCutout/getjpeg?"
+    BASE = "https://skyserver.sdss.org/dr16/SkyServerWS/ImgCutout/getjpeg?"
     PAR = f"ra={ra}&dec={dec}&scale={scale}&width={width}&height={height}"
     OPT = "&opt="+opt if opt !='' else ''
     QRY = "&query="+query if query!='' else ''
