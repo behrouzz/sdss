@@ -4,6 +4,8 @@
 # sdss
 *A python package for retrieving and analysing data from SDSS (Sloan Digital Sky Survey)*
 
+*Important:*<br/>
+[CSV](https://skyserver.sdss.org/dr18/en/tools/quicklook/summary.aspx)
 
 ## Installation
 
